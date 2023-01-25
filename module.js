@@ -8,9 +8,9 @@ function init(wsServer, path) {
         testMode = process.argv[2] === "debug",
         PLAYERS_MIN = testMode ? 1 : 4;
 
-    app.use("/just-one", wsServer.static(`${__dirname}/public`));
+    app.use("/words-mines", wsServer.static(`${__dirname}/public`));
     if (registry.config.appDir)
-        app.use("/just-one", wsServer.static(`${registry.config.appDir}/public`));
+        app.use("/words-mines", wsServer.static(`${registry.config.appDir}/public`));
     registry.handleAppPage(path, `${__dirname}/public/app.html`);
 
     const defaultWords = JSON.parse(fs.readFileSync(`${registry.config.appDir}/moderated-words.json`));
