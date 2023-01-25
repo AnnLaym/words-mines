@@ -7,7 +7,7 @@ class ProgressBar extends React.Component {
     componentDidMount() {
         this.timerSound = new Audio("/words-mines/tick.mp3");
         this.timerSound.volume = 0.4;
-        const {timed, time} = this.props.data;
+        const { timed, time } = this.props.data;
         if (timed && time !== null) {
             this.updateTimer(time);
         }
@@ -33,7 +33,7 @@ class ProgressBar extends React.Component {
     }
 
     render() {
-        const {data, setTime} = this.props;
+        const { data, setTime } = this.props;
 
         clearTimeout(this.timerTimeout);
         if (data.phase !== 0 && data.timed) {
@@ -54,7 +54,7 @@ class ProgressBar extends React.Component {
         }
 
         return (
-            <div id="timer-progress-bar"/>
+            <div id="timer-progress-bar" />
         )
     }
 }
@@ -66,10 +66,10 @@ class ReadyBtn extends React.Component {
     }
 
     render() {
-        const {isReady} = this.props;
+        const { isReady } = this.props;
         return (
             <div
-                className={cs('ready-button', {isReady})}
+                className={cs('ready-button', { isReady })}
                 onClick={() => this.toggleReady()}
             >
                 <i className="material-icons">fast_forward</i>
@@ -85,13 +85,13 @@ class AcceptBtn extends React.Component {
     }
 
     render() {
-        const {playerAcceptVotes, playerAccepted, players} = this.props;
+        const { playerAcceptVotes, playerAccepted, players } = this.props;
         const playerAcceptedText = playerAcceptVotes.length > 0
             ? `(${playerAcceptVotes.length}/${Math.ceil(players.length / 2)}) `
             : ``;
         return (
             <div
-                className={cs('accept-button', {playerAccepted})}
+                className={cs('accept-button', { playerAccepted })}
                 onClick={() => !playerAccepted && this.voteAccept()}
             >
                 Принять {playerAcceptedText}<i className="material-icons">thumb_up</i>
@@ -112,7 +112,7 @@ class Title extends React.Component {
 
 class Subtitle extends React.Component {
     render() {
-        const {text, readyBtn} = this.props;
+        const { text, readyBtn } = this.props;
         return (
             <div className="subtitle">
                 {text} {readyBtn}
@@ -123,12 +123,12 @@ class Subtitle extends React.Component {
 
 class ClosedWord extends React.Component {
     render() {
-        const {text, mistake} = this.props;
+        const { text, mistake } = this.props;
         return (
-            <div className={cs("card closed-word", {mistake, back: !mistake && text == null})}>
+            <div className={cs("card closed-word", { mistake, back: !mistake && text == null })}>
                 {(text != null || mistake)
                     ? <div>{window.hyphenate(text ? text : `(${t("empty")})`)}</div>
-                    : <div className="card-logo"/>}
+                    : <div className="card-logo" />}
                 {this.props.children}
             </div>
         )
@@ -146,8 +146,8 @@ class HintForm extends React.Component {
     }
 
     render() {
-        const {data} = this.props;
-        const {userId, closedWord, master, rounds} = data;
+        const { data } = this.props;
+        const { userId, closedWord, master, rounds } = data;
         return (
             <div className="hint-form">
                 <div className="hint-cont">
@@ -163,7 +163,7 @@ class HintForm extends React.Component {
                             onKeyDown={(evt) => this.onKeyDown(evt)}
                         />
                         <div className="bl-corner">
-                            <Avatar data={data} player={userId}/>
+                            <Avatar data={data} player={userId} />
                         </div>
                         <div className="br-corner">
                             <div
@@ -176,9 +176,9 @@ class HintForm extends React.Component {
                     </div>
                 </div>
                 <div className="avatar-arrow">
-                    <Avatar data={data} player={master}/>
+                    <Avatar data={data} player={master} />
                 </div>
-                <ClosedWord text={closedWord}/>
+                <ClosedWord text={closedWord} />
             </div>
         )
     }
@@ -186,13 +186,13 @@ class HintForm extends React.Component {
 
 class MasterTarget extends React.Component {
     render() {
-        const {data} = this.props;
-        const {master, closedWord} = data;
+        const { data } = this.props;
+        const { master, closedWord } = data;
         return (
             <div className="master-target">
-                <ClosedWord text={closedWord}/>
+                <ClosedWord text={closedWord} />
                 <div className="master-avatar">
-                    <Avatar data={data} player={master}/>
+                    <Avatar data={data} player={master} />
                 </div>
             </div>
         )
@@ -209,8 +209,8 @@ class ClosedWordForm extends React.Component {
     }
 
     render() {
-        const {data} = this.props;
-        const {userId} = data;
+        const { data } = this.props;
+        const { userId } = data;
 
         return (
             <div className="card closed-word">
@@ -222,7 +222,7 @@ class ClosedWordForm extends React.Component {
                     onKeyDown={(evt) => this.onKeyDown(evt)}
                 />
                 <div className="bl-corner">
-                    <Avatar data={data} player={userId}/>
+                    <Avatar data={data} player={userId} />
                 </div>
                 <div className="br-corner">
                     <div
@@ -241,27 +241,28 @@ class ClosedWordForm extends React.Component {
 //TODO: add points and other data
 class ClosedWordResult extends React.Component {
     render() {
-        const {data} = this.props;
-        const {wordGuessed, guessedWord, wordAccepted, word, master, scoreChanges} = data;
+        const { data } = this.props;
+        const { wordGuessed, guessedWord, wordAccepted, word, master, scoreChanges } = data;
 
         if (wordGuessed || wordAccepted) {
             return (
                 <ClosedWord text={wordGuessed ? word : guessedWord}>
-                    scoreChanges[master] && (<div className="tl-corner">
+                    {(scoreChanges[master] && <div> хуёпизда очки </div>)}
+                    (<div className="tl-corner">
                         <div className="score-change">
                             {'+' + scoreChanges[master]}
                         </div>
                     </div>)
                     <div className="bl-corner">
-                        <Avatar data={data} player={master}/>
+                        <Avatar data={data} player={master} />
                     </div>
                 </ClosedWord>
             )
         }
         return (
             <div className="closed-word-result">
-                <ClosedWord text={word}/>
-            
+                <ClosedWord text={word} />
+
             </div>
         )
     }
@@ -269,11 +270,11 @@ class ClosedWordResult extends React.Component {
 
 class StatusBar extends React.Component {
     wordGuessed(a) {
-        this.props.socket.emit("word-guessed",a);
+        this.props.socket.emit("word-guessed", a);
     }
     render() {
 
-        const {data, socket, setTime, setPhase2} = this.props;
+        const { data, socket, setTime, setPhase2 } = this.props;
         const {
             phase, players, playerWin, timed, time, userId,
             master, readyPlayers, playerNames, wordGuessed, wordAccepted, playerAcceptVotes, noHints
@@ -292,57 +293,57 @@ class StatusBar extends React.Component {
         let hasReady = false
         let hasAccept = false
         if (phase === 0 && !playerWin) {
-            content = <MasterTarget data={data}/>;
+            content = <MasterTarget data={data} />;
             subtitle = enoughText;
         } else if (phase === 1) {
             if (isMaster || isGuesser) {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t("Wait for players to write their hints");
             } else if (isReady) {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t("Wait for players to write their hints");
             } else if (isPlayer) {
-                content = <HintForm data={data} socket={socket}/>;
+                content = <HintForm data={data} socket={socket} />;
                 subtitle = t("Write your hint");
             } else {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t("Wait for players to write their hints");
             }
         } else if (phase === 2) {
             if (isMaster) {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t("Wait for players to delete duplicates");
-            } else if(isGuesser){
-                content = <MasterTarget data={data}/>;
+            } else if (isGuesser) {
+                content = <MasterTarget data={data} />;
                 subtitle = "Отгадайте слово не наступая на мины";
             } else {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t("Delete duplicates");
                 hasReady = isPlayer;
             }
         } else if (phase === 3) {
             if (isMaster) {
-                content = <ClosedWordForm data={data} socket={socket}/>;
+                content = <ClosedWordForm data={data} socket={socket} />;
                 subtitle = t("Now try guess the original word");
             } else {
-                content = <MasterTarget data={data}/>;
+                content = <MasterTarget data={data} />;
                 subtitle = t('Now ') + window.commonRoom.getPlayerName(master) + t(' should guess original word');
             }
         } else if (phase === 4) {
-            content = <ClosedWordResult data={data}/>;
+            content = <ClosedWordResult data={data} />;
             subtitle = t("Next round");
             hasReady = isPlayer;
             hasAccept = !wordGuessed && !wordAccepted && !noHints;
         } else if (phase === 0 && playerWin) {
             content = <div className="player-win">
-                <Avatar data={data} player={playerWin}/>
-                <Title text={t('The winner is') + ' ' + window.commonRoom.getPlayerName(playerWin) + '!'}/>
+                <Avatar data={data} player={playerWin} />
+                <Title text={t('The winner is') + ' ' + window.commonRoom.getPlayerName(playerWin) + '!'} />
             </div>;
             subtitle = enoughText;
         }
 
         return (
-            
+
             <div className="status-bar-wrap">
                 <div className="status-bar">
                     <div className="aligner">
@@ -351,11 +352,11 @@ class StatusBar extends React.Component {
                     {data.userId == data.master && data.phase == 2 && <div class="masterButtons">
                         <div onClick={() => this.wordGuessed(true)} class="wordGuessedButton">Слово угадано!</div>
                         <div onClick={() => this.wordGuessed(false)} class="wordNotGuessedButton">Слово не угадано!</div>
-                         </div>} 
+                    </div>}
                     {subtitle && <div className="subtitle">{subtitle}</div>}
-                    {hasReady && <ReadyBtn isReady={isReady} socket={socket}/>}
+                    {hasReady && <ReadyBtn isReady={isReady} socket={socket} />}
                     {timed && time !== null && (
-                        <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime}/>
+                        <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} />
                     )}
                 </div>
             </div>
