@@ -103,15 +103,6 @@ class HostControls extends React.Component {
                                                                       && this.changeParam(evt.target.valueAsNumber, "teamTime")}
                                 />) : (<span className="value">{data.teamTime}</span>)}
                             </div>
-                            <div className="set-master-time"><i title={t("master time")}
-                                                                className="material-icons">alarm_on</i>
-                                {(isHost && !inProcess) ? (<input id="master-time"
-                                                                  type="number"
-                                                                  defaultValue={data.masterTime}
-                                                                  min="0"
-                                                                  onChange={evt => !isNaN(evt.target.valueAsNumber)
-                                                                      && this.changeParam(evt.target.valueAsNumber, "masterTime")}
-                                />) : (<span className="value">{data.masterTime}</span>)}
                                 <div className="set-reveal-time"><i title={t("reveal time")}
                                                                     className="material-icons">alarm_on</i>
                                     {(isHost && !inProcess) ? (<input id="reveal-time"
@@ -134,17 +125,8 @@ class HostControls extends React.Component {
                                                                           && this.changeParam(evt.target.valueAsNumber, "wordsLevel")}
                                     />) : (<span className="value">{data.wordsLevel}</span>)}
                                 </div>
-                                <div className="set-goal"><i title={t("goal")}
-                                                             className="material-icons">flag</i>
-                                    {(isHost && !inProcess) ? (<input id="goal"
-                                                                      type="number"
-                                                                      defaultValue={data.goal}
-                                                                      min="1"
-                                                                      onChange={evt => !isNaN(evt.target.valueAsNumber)
-                                                                          && this.changeParam(evt.target.valueAsNumber, "goal")}
-                                    />) : (<span className="value">{data.goal}</span>)}
-                                </div>
-                            </div>
+                             
+                           
                         </div>
                     </div>
                     {isHost || data.packName ? <div className="little-controls custom-pack-button">

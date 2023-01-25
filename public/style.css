@@ -38,6 +38,9 @@ body.dark-theme {
     filter: drop-shadow(0px 0px 3px cyan);
     color: #00bdbd;
 }
+.player.guesser {
+    filter: drop-shadow(0px 0px 3px #ffffff);
+}
 
 
 .spectator.self, .player.self {
@@ -47,6 +50,13 @@ body.dark-theme {
 .player.current:before {
     content: "➜ ";
     line-height: 0;
+}
+
+.masterButtons {
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    display: flex;
 }
 
 .player.offline {
@@ -92,6 +102,13 @@ body.dark-theme {
     font-size: 16px;
     cursor: pointer;
     vertical-align: middle;
+}
+
+.wordGuessedButton, .wordNotGuessedButton {
+    color: pink;
+    cursor: pointer;
+    padding: 3px 16px;
+    border: 1px solid;
 }
 
 .player .score {

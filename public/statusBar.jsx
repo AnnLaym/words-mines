@@ -2,6 +2,7 @@
 //import ReactDOM from "react-dom"
 //import Avatar from '../avatar.jsx'
 
+
 class ProgressBar extends React.Component {
     componentDidMount() {
         this.timerSound = new Audio("/just-one/tick.mp3");
@@ -260,18 +261,18 @@ class ClosedWordResult extends React.Component {
         return (
             <div className="closed-word-result">
                 <ClosedWord text={word}/>
-                <ClosedWord text={guessedWord} mistake={true}>
-                    <div className="bl-corner">
-                        <Avatar data={data} player={master}/>
-                    </div>
-                </ClosedWord>
+            
             </div>
         )
     }
 }
 
 class StatusBar extends React.Component {
+    wordGuessed(a) {
+        this.props.socket.emit("word-guessed",a);
+    }
     render() {
+
         const {data, socket, setTime, setPhase2} = this.props;
         const {
             phase, players, playerWin, timed, time, userId,
@@ -279,9 +280,9 @@ class StatusBar extends React.Component {
         } = data;
         const playerAccepted = playerAcceptVotes.includes(userId);
         const isMaster = userId === master;
+        const isGuesser = userId === data.guesPlayer;
         const isReady = readyPlayers.includes(userId);
         const isPlayer = players.includes(userId);
-
         const enoughText = (players.length > 2)
             ? t('Host can start game')
             : t('Not enough players (minimum 3)');
@@ -294,7 +295,7 @@ class StatusBar extends React.Component {
             content = <MasterTarget data={data}/>;
             subtitle = enoughText;
         } else if (phase === 1) {
-            if (isMaster) {
+            if (isMaster || isGuesser) {
                 content = <MasterTarget data={data}/>;
                 subtitle = t("Wait for players to write their hints");
             } else if (isReady) {
@@ -311,6 +312,9 @@ class StatusBar extends React.Component {
             if (isMaster) {
                 content = <MasterTarget data={data}/>;
                 subtitle = t("Wait for players to delete duplicates");
+            } else if(isGuesser){
+                content = <MasterTarget data={data}/>;
+                subtitle = "Отгадайте слово не наступая на мины";
             } else {
                 content = <MasterTarget data={data}/>;
                 subtitle = t("Delete duplicates");
@@ -338,17 +342,18 @@ class StatusBar extends React.Component {
         }
 
         return (
+            
             <div className="status-bar-wrap">
                 <div className="status-bar">
                     <div className="aligner">
                         {content}
                     </div>
+                    {data.userId == data.master && data.phase == 2 && <div class="masterButtons">
+                        <div onClick={() => this.wordGuessed(true)} class="wordGuessedButton">Слово угадано!</div>
+                        <div onClick={() => this.wordGuessed(false)} class="wordNotGuessedButton">Слово не угадано!</div>
+                         </div>} 
                     {subtitle && <div className="subtitle">{subtitle}</div>}
                     {hasReady && <ReadyBtn isReady={isReady} socket={socket}/>}
-                    {hasAccept && <AcceptBtn playerAcceptVotes={playerAcceptVotes}
-                                             playerAccepted={playerAccepted}
-                                             players={players}
-                                             socket={socket}/>}
                     {timed && time !== null && (
                         <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime}/>
                     )}

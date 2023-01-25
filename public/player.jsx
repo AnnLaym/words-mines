@@ -60,6 +60,7 @@ class Player extends React.Component {
         const {master, readyPlayers} = data;
         const isReady = readyPlayers.includes(id);
         const isMaster = id === master;
+        
 
         return (
             <div className={cs("player", {
@@ -67,6 +68,7 @@ class Player extends React.Component {
                 offline: !~data.onlinePlayers.indexOf(id),
                 self: id === data.userId,
                 master: isMaster,
+                guesser: id === data.guesPlayer
             })} onTouchStart={(e) => e.target.focus()}>
                 <div className="player-inner">
                     <div className="player-avatar-section"

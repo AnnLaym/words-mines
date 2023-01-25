@@ -29,6 +29,7 @@ class Hint extends React.Component {
         const banned = bannedHints[player];
         const unbanned = unbannedHints[player];
         const isMaster = userId === master;
+        const isGuesser = userId === data.guesPlayer;
         const origText = hints[player] || (closedHints && closedHints[player]);
         const text = origText ? window.hyphenate(origText) : null;
 
@@ -60,7 +61,7 @@ class Hint extends React.Component {
         }
         if (
             playerLiked === player
-            || (phase === 4 && !banned && isMaster && playerLiked == null && wordGuessed)
+            || (phase === 4 && !banned && isGuesser && playerLiked == null && wordGuessed)
         ) {
             corners.push(
                 <div className="tr-corner">
