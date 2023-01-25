@@ -161,7 +161,7 @@ function init(wsServer, path) {
                                         endRound();
                                     } else if (room.phase === 4) {
                                         if (!room.playerLiked && room.wordGuessed) {
-                                            changeScore(room.master, -2);
+                                            changeScore(room.guesPlayer, -2);
                                             processInactivity(room.master, true);
                                         }
                                         startRound();
