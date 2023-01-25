@@ -247,12 +247,12 @@ class ClosedWordResult extends React.Component {
         if (wordGuessed || wordAccepted) {
             return (
                 <ClosedWord text={wordGuessed ? word : guessedWord}>
-                    {(scoreChanges[master] && <div> хуёпизда очки </div>)}
-                    (<div className="tl-corner">
+                    {scoreChanges[master] && (<div className="tl-corner">
                         <div className="score-change">
                             {'+' + scoreChanges[master]}
                         </div>
-                    </div>)
+                    </div>)}
+
                     <div className="bl-corner">
                         <Avatar data={data} player={master} />
                     </div>
