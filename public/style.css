@@ -794,7 +794,7 @@ input#command-input {
     font-family: 'Bad Script', cursive;
     font-size: 40px;
     line-height: 40px;
-    background: url(/just-one/crumpled.jpg);
+    background: url(/words-mines/crumpled.jpg);
     padding: 5px;
     background-size: 92%;
 }
@@ -922,7 +922,7 @@ input#command-input {
 }
 
 .card .card-logo {
-    background: url(/just-one/logo.png);
+    background: url(/words-mines/logo.png);
     background-size: contain;
     width: 100%;
     height: 81%;
@@ -932,7 +932,7 @@ input#command-input {
 
 .card.hint .card-logo {
     height: 55%;
-    background-image: url(/just-one/logo-paper.png);
+    background-image: url(/words-mines/logo-paper.png);
     opacity: 0.4;
 }
 

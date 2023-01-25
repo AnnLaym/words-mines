@@ -5,7 +5,7 @@
 
 class ProgressBar extends React.Component {
     componentDidMount() {
-        this.timerSound = new Audio("/just-one/tick.mp3");
+        this.timerSound = new Audio("/words-mines/tick.mp3");
         this.timerSound.volume = 0.4;
         const {timed, time} = this.props.data;
         if (timed && time !== null) {

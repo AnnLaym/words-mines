@@ -103,13 +103,13 @@ class Game extends React.Component {
         });
         document.title = `Just one - ${initArgs.roomId}`;
         this.socket.emit("init", initArgs);
-        this.tapSound = new Audio("/just-one/tap.mp3");
+        this.tapSound = new Audio("/words-mines/tap.mp3");
         this.tapSound.volume = 0.3;
-        this.storySound = new Audio("/just-one/start.mp3");
+        this.storySound = new Audio("/words-mines/start.mp3");
         this.storySound.volume = 0.4;
-        this.revealSound = new Audio("/just-one/reveal.mp3");
+        this.revealSound = new Audio("/words-mines/reveal.mp3");
         this.revealSound.volume = 0.3;
-        this.masterSound = new Audio("/just-one/master.mp3");
+        this.masterSound = new Audio("/words-mines/master.mp3");
         this.masterSound.volume = 0.7;
     }
 
