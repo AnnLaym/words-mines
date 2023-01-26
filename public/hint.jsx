@@ -26,15 +26,15 @@ class Hint extends React.Component {
     render() {
         const {data, player, index} = this.props;
         const {bannedHints, unbannedHints, hints, closedHints, playerLiked, userId, master, phase, wordGuessed, scoreChanges, rounds, players} = data;
-        const banned = bannedHints[player];
-        const unbanned = unbannedHints[player];
+        const banned = bannedHints?.[player];
+        const unbanned = unbannedHints?.[player];
         const isMaster = userId === master;
         const isGuesser = userId === data.guesPlayer;
         const origText = hints[player] || (closedHints && closedHints[player]);
         const text = origText ? window.hyphenate(origText) : null;
 
         const corners = [];
-        if (!isMaster || playerLiked || (phase === 4 && !wordGuessed)) {
+        if (!isGuesser ||playerLiked || (phase === 4 && !wordGuessed)) {
             corners.push(
                 <div className="bl-corner">
                     <Avatar data={data} player={player}/>
@@ -42,7 +42,7 @@ class Hint extends React.Component {
             )
         }
         if (phase === 2 || (phase === 4 && banned)) {
-            const showWarnAvatars = (!isMaster && players.includes(userId)) || phase === 4;
+            const showWarnAvatars = (!isMaster && !isGuesser && players.includes(userId)) || phase === 4;
             corners.push(
                 <div className="tr-corner">
                     <div

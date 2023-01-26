@@ -96,14 +96,21 @@ function init(wsServer, path) {
                     [...room.onlinePlayers].forEach(playerId => {
                         if (room.players.has(playerId)) {
                             if (room.guesPlayer === playerId)
-                                send(playerId, "player-state", { closedHints: null, closedWord: null,bannedHints: null, unbannedHints: null});
+                                send(playerId, "player-state", {
+                                    closedHints: null, closedWord: null,
+                                    bannedHints: null, unbannedHints: null
+                                });
                             else if (room.master === playerId)
-                                send(playerId, "player-state", { closedHints: null, closedWord: state.closedWord, bannedHints: state.bannedHints, unbannedHints: state.unbannedHints});
+                                send(playerId, "player-state", {
+                                    closedHints: null, closedWord: state.closedWord,
+                                    bannedHints: null, unbannedHints: null
+                                });
                             else
                                 send(playerId, "player-state", {
                                     closedHints: state.closedHints,
                                     closedWord: state.closedWord,
-                                    bannedHints: state.bannedHints, unbannedHints: state.unbannedHints
+                                    bannedHints: state.bannedHints,
+                                    unbannedHints: state.unbannedHints
                                 });
                         } else {
                             send(playerId, "player-state", { closedHints: null, closedWord: null });
@@ -423,6 +430,7 @@ function init(wsServer, path) {
                             state.unbannedHints[hintUser] = null;
                         }
                         update();
+                        updatePlayerState();
                     }
                 },
                 "set-like": (user, likedUser) => {

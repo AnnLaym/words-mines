@@ -59,7 +59,24 @@ class ProgressBar extends React.Component {
     }
 }
 
+class ReadyBtn extends React.Component {
 
+    toggleReady() {
+        this.props.socket.emit("toggle-ready");
+    }
+
+    render() {
+        const {isReady} = this.props;
+        return (
+            <div
+                className={cs('ready-button', {isReady})}
+                onClick={() => this.toggleReady()}
+            >
+                <i className="material-icons">fast_forward</i>
+            </div>
+        )
+    }
+}
 
 class AcceptBtn extends React.Component {
 
@@ -302,7 +319,6 @@ class StatusBar extends React.Component {
             } else {
                 content = <MasterTarget data={data} />;
                 subtitle = t("Delete duplicates");
-                hasReady = isPlayer;
             }
         } else if (phase === 3) {
             if (isMaster) {
