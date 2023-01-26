@@ -96,7 +96,7 @@ function init(wsServer, path) {
                     [...room.onlinePlayers].forEach(playerId => {
                         if (room.players.has(playerId)) {
                             if (room.guesPlayer === playerId)
-                                send(playerId, "player-state", { closedHints: null, closedWord: null });
+                                send(playerId, "player-state", { closedHints: null, closedWord: null, bannedHints: null });
                             else if (room.master === playerId)
                                 send(playerId, "player-state", { closedHints: null, closedWord: state.closedWord });
                             else
@@ -154,7 +154,6 @@ function init(wsServer, path) {
                                             startTeamPhase();
                                         }
                                     } else if (room.phase === 2) {
-                                        processInactivity(room.master, true);
                                         endRound();
                                     } else if (room.phase === 3) {
                                         processInactivity(room.master, true);
@@ -204,18 +203,19 @@ function init(wsServer, path) {
                     room.scoreChanges[player] = room.scoreChanges[player] || 0;
                     room.scoreChanges[player] += change;
                 },
+                
                 endRound = () => {
                     room.phase = 4;
                     Object.keys(state.closedHints).forEach((player) => {
                         if (room.bannedHints[player]) {
-                            changeScore(player, 2);
+                            changeScore(player, 3);
                         };
                         room.playerHints.add(player);
                     });
                     if (room.wordGuessed && Object.keys(room.bannedHints).length == 0) {
-                        changeScore(room.master, 3);
-                        changeScore(room.guesPlayer, 3)
-                    }
+                        changeScore(room.master, 5);
+                        changeScore(room.guesPlayer, 5);
+                    };
                     room.word = state.closedWord;
                     room.hints = state.closedHints;
                     room.readyPlayers.clear();
@@ -233,11 +233,17 @@ function init(wsServer, path) {
                     update();
                     updatePlayerState();
                 },
+                nextGuessPlayer = () =>{
+                    const filtered = [...room.players].filter(it => {
+                        return !room.wasGuesser.includes(it) && it !== room.master;
+                    });
+                    room.guesPlayer = shuffleArray(filtered)[0];
+                    room.wasGuesser.push(room.guesPlayer);
+                },
                 startRound = (initial) => {
                     room.readyPlayers.clear();
                     room.noHints = false;
                     if (room.players.size >= PLAYERS_MIN) {
-
                         checkScores();
                         if (!room.playerWin || initial) {
                             if (!initial && !room.masterKicked)
@@ -256,11 +262,7 @@ function init(wsServer, path) {
                             room.playerHints.clear();
                             room.scoreChanges = {};
                             room.word = state.closedWord = room.guessedWord = null;
-                            const filtered = [...room.players].filter(it => {
-                                return !room.wasGuesser.includes(it) && it !== room.master;
-                            });
-                            room.guesPlayer = shuffleArray(filtered)[0]
-                            room.wasGuesser.push(room.guesPlayer);
+                            nextGuessPlayer();
                             room.readyPlayers.add(room.master);
                             room.readyPlayers.add(room.guesPlayer);
                             state.closedWord = dealWord();
@@ -411,7 +413,7 @@ function init(wsServer, path) {
                     }
                 },
                 "toggle-hint-ban": (user, hintUser) => {
-                    if (room.phase === 2 && room.players.has(user) && room.master !== user && state.closedHints[hintUser]) {
+                    if (room.phase === 2 && room.players.has(user) && room.master !== user && room.guesPlayer !== user && state.closedHints[hintUser]) {
                         if (room.bannedHints[hintUser]) {
                             room.bannedHints[hintUser] = null;
                             room.unbannedHints[hintUser] = user;
@@ -425,26 +427,21 @@ function init(wsServer, path) {
                 "set-like": (user, likedUser) => {
                     if (room.phase === 4 && !room.playerLiked && room.wordGuessed && user == room.guesPlayer) {
                         room.playerLiked = likedUser;
-                        changeScore(likedUser, 2);
+                        changeScore(likedUser, 1);
                         if (room.time >= 5000)
                             room.time = 5000;
                         checkScores();
                         update();
-                    }
+                    };
                 },
                 "toggle-ready": (user) => {
-                    if (room.players.has(user) && (
-                        (room.master !== user && room.phase === 2)
-                        || (room.phase === 4)
-                    )) {
+                    if (room.players.has(user) && (room.phase === 4)) {
                         if (room.readyPlayers.has(user))
                             room.readyPlayers.delete(user);
                         else {
                             room.readyPlayers.add(user);
                             if (room.players.size === room.readyPlayers.size)
-                                if (room.phase === 2)
-                                    endRound();
-                                else if (room.phase === 4)
+                                if (room.phase === 4)
                                     startRound();
                         }
                         update();

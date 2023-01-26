@@ -775,7 +775,7 @@ input#command-input {
 }
 
 .card {
-    height: 140px;
+    height: 210px;
     /* min-width: 220px; */
     display: flex;
     align-items: center;
