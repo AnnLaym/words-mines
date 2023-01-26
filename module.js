@@ -45,8 +45,6 @@ function init(wsServer, path) {
                     word: null,
                     guessedWord: null,
                     hints: {},
-                    bannedHints: {},
-                    unbannedHints: {},
                     rounds: 0,
                     phase: 0,
                     playerTime: 60,
@@ -70,7 +68,9 @@ function init(wsServer, path) {
                     roomWordsList: shuffleArray(defaultWords[room.wordsLevel]),
                     words: [],
                     closedHints: {},
-                    closedWord: null
+                    closedWord: null,
+                    bannedHints: {},
+                    unbannedHints: {},
                 };
             this.room = room;
             this.state = state;
@@ -96,13 +96,14 @@ function init(wsServer, path) {
                     [...room.onlinePlayers].forEach(playerId => {
                         if (room.players.has(playerId)) {
                             if (room.guesPlayer === playerId)
-                                send(playerId, "player-state", { closedHints: null, closedWord: null, bannedHints: null });
+                                send(playerId, "player-state", { closedHints: null, closedWord: null,bannedHints: null, unbannedHints: null});
                             else if (room.master === playerId)
-                                send(playerId, "player-state", { closedHints: null, closedWord: state.closedWord });
+                                send(playerId, "player-state", { closedHints: null, closedWord: state.closedWord, bannedHints: state.bannedHints, unbannedHints: state.unbannedHints});
                             else
                                 send(playerId, "player-state", {
                                     closedHints: state.closedHints,
-                                    closedWord: state.closedWord
+                                    closedWord: state.closedWord,
+                                    bannedHints: state.bannedHints, unbannedHints: state.unbannedHints
                                 });
                         } else {
                             send(playerId, "player-state", { closedHints: null, closedWord: null });
@@ -203,16 +204,16 @@ function init(wsServer, path) {
                     room.scoreChanges[player] = room.scoreChanges[player] || 0;
                     room.scoreChanges[player] += change;
                 },
-                
+
                 endRound = () => {
                     room.phase = 4;
                     Object.keys(state.closedHints).forEach((player) => {
-                        if (room.bannedHints[player]) {
+                        if (state.bannedHints[player]) {
                             changeScore(player, 3);
                         };
                         room.playerHints.add(player);
                     });
-                    if (room.wordGuessed && Object.keys(room.bannedHints).length == 0) {
+                    if (room.wordGuessed && Object.keys(state.bannedHints).length == 0) {
                         changeScore(room.master, 5);
                         changeScore(room.guesPlayer, 5);
                     };
@@ -233,7 +234,7 @@ function init(wsServer, path) {
                     update();
                     updatePlayerState();
                 },
-                nextGuessPlayer = () =>{
+                nextGuessPlayer = () => {
                     const filtered = [...room.players].filter(it => {
                         return !room.wasGuesser.includes(it) && it !== room.master;
                     });
@@ -255,8 +256,8 @@ function init(wsServer, path) {
                             room.rounds++;
                             room.phase = 1;
                             room.hints = {};
-                            room.bannedHints = {};
-                            room.unbannedHints = {};
+                            state.bannedHints = {};
+                            state.unbannedHints = {};
                             state.closedHints = {};
                             room.playerAcceptVotes.clear();
                             room.playerHints.clear();
@@ -295,7 +296,7 @@ function init(wsServer, path) {
                     room.phase = 3;
                     room.readyPlayers.clear();
                     Object.keys(state.closedHints).forEach((playerId) => {
-                        if (!room.bannedHints[playerId])
+                        if (!state.bannedHints[playerId])
                             room.hints[playerId] = state.closedHints[playerId];
                         else {
                             room.playerHints.delete(playerId);
@@ -414,12 +415,12 @@ function init(wsServer, path) {
                 },
                 "toggle-hint-ban": (user, hintUser) => {
                     if (room.phase === 2 && room.players.has(user) && room.master !== user && room.guesPlayer !== user && state.closedHints[hintUser]) {
-                        if (room.bannedHints[hintUser]) {
-                            room.bannedHints[hintUser] = null;
-                            room.unbannedHints[hintUser] = user;
+                        if (state.bannedHints[hintUser]) {
+                            state.bannedHints[hintUser] = null;
+                            state.unbannedHints[hintUser] = user;
                         } else {
-                            room.bannedHints[hintUser] = user;
-                            room.unbannedHints[hintUser] = null;
+                            state.bannedHints[hintUser] = user;
+                            state.unbannedHints[hintUser] = null;
                         }
                         update();
                     }
