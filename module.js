@@ -374,6 +374,39 @@ function init(wsServer, path) {
                         stopGame();
                     update();
                 },
+                rerollRound = () => {
+                    room.readyPlayers.clear();
+                    room.noHints = false;
+                    if (room.players.size >= PLAYERS_MIN) {
+                        checkScores();
+                        if (!room.playerWin || initial) {
+                            room.masterKicked = false;
+                            room.wordAccepted = null;
+                            room.wordGuessed = null;
+                            room.playerLiked = null;
+                            room.phase = 1;
+                            room.hints = {};
+                            state.bannedHints = {};
+                            state.unbannedHints = {};
+                            state.closedHints = {};
+                            room.playerAcceptVotes.clear();
+                            room.playerHints.clear();
+                            room.scoreChanges = {};
+                            room.word = state.closedWord = room.guessedWord = null;
+                            nextGuessPlayer();
+                            room.readyPlayers.add(room.master);
+                            room.readyPlayers.add(room.guesPlayer);
+                            state.closedWord = dealWord();
+                            startTimer();
+                            update();
+                            updatePlayerState();
+                        }
+                    } else {
+                        room.phase = 0;
+                        room.teamsLocked = false;
+                        update();
+                    }
+                },
                 userEvent = (user, event, data) => {
                     this.lastInteraction = new Date();
                     try {
@@ -521,6 +554,8 @@ function init(wsServer, path) {
                     if (!room.teamsLocked) {
                         if (room.master === user)
                             room.master = getNextPlayer();
+                        if(room.guesPlayer === user)
+                            rerollRound()
                         room.players.delete(user);
                         room.spectators.add(user);
                         update();
