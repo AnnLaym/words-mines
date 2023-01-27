@@ -775,7 +775,7 @@ input#command-input {
 }
 
 .card {
-    height: 210px;
+    height: 150px;
     /* min-width: 220px; */
     display: flex;
     align-items: center;
@@ -792,7 +792,7 @@ input#command-input {
 
 .card.hint {
     font-family: 'Bad Script', cursive;
-    font-size: 40px;
+    font-size: 35px;
     line-height: 40px;
     background: url(/words-mines/crumpled.jpg);
     padding: 5px;
