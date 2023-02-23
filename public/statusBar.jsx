@@ -152,7 +152,7 @@ class HintForm extends React.Component {
             <div className="hint-form">
                 <div className="hint-cont">
                     <div
-                        className="card hint"
+                        className="card hint input"
                         style={Messy.getStyle(rounds + '_' + 'input')}
                     >
                         <input

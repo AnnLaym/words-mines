@@ -197,6 +197,8 @@ function init(wsServer, path) {
                 },
                 endGame = () => {
                     room.paused = true;
+                    room.guesPlayer = null;
+                    room.wasGuesser = [],
                     room.teamsLocked = false;
                     room.time = null;
                     room.phase = 0;

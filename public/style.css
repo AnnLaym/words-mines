@@ -800,6 +800,13 @@ input#command-input {
     height: 250;
 }
 
+.card.hint.input {
+    width: 500px;
+    max-width: none;
+    font-size: 20px;
+    height: 175px;
+}
+
 .card {
     box-shadow: 0 0 4px 1px #969696;
 }
