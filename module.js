@@ -182,6 +182,9 @@ function init(wsServer, path) {
                 startGame = () => {
                     if (room.players.size >= PLAYERS_MIN) {
                         room.masterKicked = false;
+                        room.readyToGuess = null,
+                        room.guesPlayer = null;
+                        room.wasGuesser = [],
                         room.playerWin = null;
                         room.playerScores = {};
                         room.scoreChanges = {};
@@ -199,7 +202,7 @@ function init(wsServer, path) {
                     room.paused = true;
                     room.guesPlayer = null;
                     room.wasGuesser = [],
-                    room.teamsLocked = false;
+                        room.teamsLocked = false;
                     room.time = null;
                     room.phase = 0;
                     room.playerAcceptVotes.clear();
@@ -556,7 +559,7 @@ function init(wsServer, path) {
                     if (!room.teamsLocked) {
                         if (room.master === user)
                             room.master = getNextPlayer();
-                        if(room.guesPlayer === user)
+                        if (room.guesPlayer === user)
                             rerollRound()
                         room.players.delete(user);
                         room.spectators.add(user);

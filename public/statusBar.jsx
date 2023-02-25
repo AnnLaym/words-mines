@@ -26,10 +26,24 @@ class ProgressBar extends React.Component {
     }
 
     progressBarUpdate(x, outOf) {
-        const percent = (1 - x / outOf) * 100 + '%'
-        const barNode = document.getElementById('timer-progress-bar');
-        if (barNode)
-            barNode.style.width = percent;
+        let firstHalfAngle = 180,
+            secondHalfAngle = 0;
+
+        // caluclate the angle
+        let drawAngle = x / outOf * 360;
+
+        // calculate the angle to be displayed if each half
+        if (drawAngle <= 180) {
+            firstHalfAngle = drawAngle;
+        } else {
+            secondHalfAngle = drawAngle - 180;
+        }
+
+        // set the transition
+        if (document.querySelector(".rtb-slice1"))
+            document.querySelector(".rtb-slice1").style.transform = `rotate(${firstHalfAngle}deg)`;
+        if (document.querySelector(".rtb-slice2"))
+            document.querySelector(".rtb-slice2").style.transform = `rotate(${secondHalfAngle}deg)`;
     }
 
     render() {
@@ -53,9 +67,25 @@ class ProgressBar extends React.Component {
             }, 1000);
         }
 
-        return (
-            <div id="timer-progress-bar" />
-        )
+        return data.timed ? (
+            <div className="round-track-bar">
+                <div className="rtb-clip1">
+                    <div className="rtb-slice1" />
+                </div>
+                <div className="rtb-clip2">
+                    <div className="rtb-slice2" />
+                </div>
+                <div className="rtb-content">
+                    <span className="timer-time">
+                        {(new Date(data.phase === 2
+                            ? data.gameTimeLeft
+                            : (!data.teamWin && data.phase !== 3)
+                                ? data.time : 0)).toUTCString().match(/(\d\d:\d\d )/)?.[0].trim()}
+                    </span>
+                </div>
+            </div>
+
+        ) : ""
     }
 }
 
@@ -66,10 +96,10 @@ class ReadyBtn extends React.Component {
     }
 
     render() {
-        const {isReady} = this.props;
+        const { isReady } = this.props;
         return (
             <div
-                className={cs('ready-button', {isReady})}
+                className={cs('ready-button', { isReady })}
                 onClick={() => this.toggleReady()}
             >
                 <i className="material-icons">fast_forward</i>
@@ -125,7 +155,7 @@ class ClosedWord extends React.Component {
     render() {
         const { text, mistake } = this.props;
         return (
-            <div className={cs("card closed-word", { mistake, back: !mistake && text == null })}>
+            <div className={cs("closed-word", { mistake, back: !mistake && text == null })}>
                 {(text != null || mistake)
                     ? <div>{window.hyphenate(text ? text : `(${t("empty")})`)}</div>
                     : <div className="card-logo" />}
@@ -147,7 +177,7 @@ class HintForm extends React.Component {
 
     render() {
         const { data } = this.props;
-        const { userId, closedWord, master, rounds } = data;
+        const { userId, closedWord, master, rounds, guesPlayer } = data;
         return (
             <div className="hint-form">
                 <div className="hint-cont">
@@ -162,9 +192,6 @@ class HintForm extends React.Component {
                             autoFocus="true"
                             onKeyDown={(evt) => this.onKeyDown(evt)}
                         />
-                        <div className="bl-corner">
-                            <Avatar data={data} player={userId} />
-                        </div>
                         <div className="br-corner">
                             <div
                                 className="add-command-button"
@@ -175,10 +202,8 @@ class HintForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="avatar-arrow">
-                    <Avatar data={data} player={master} />
-                </div>
                 <ClosedWord text={closedWord} />
+
             </div>
         )
     }
@@ -191,9 +216,6 @@ class MasterTarget extends React.Component {
         return (
             <div className="master-target">
                 <ClosedWord text={closedWord} />
-                <div className="master-avatar">
-                    <Avatar data={data} player={master} />
-                </div>
             </div>
         )
     }
@@ -242,16 +264,12 @@ class ClosedWordForm extends React.Component {
 class ClosedWordResult extends React.Component {
     render() {
         const { data } = this.props;
-        const { wordGuessed, guessedWord, wordAccepted, word, master, scoreChanges } = data;
+        const { wordGuessed, guessedWord, wordAccepted, word, master } = data;
 
         if (wordGuessed || wordAccepted) {
             return (
                 <ClosedWord text={wordGuessed ? word : guessedWord}>
-                    {scoreChanges[master] && (<div className="tl-corner">
-                        <div className="score-change">
-                            {'+' + scoreChanges[master]}
-                        </div>
-                    </div>)}
+
 
                     <div className="bl-corner">
                         <Avatar data={data} player={master} />
@@ -277,7 +295,7 @@ class StatusBar extends React.Component {
         const { data, socket, setTime, setPhase2 } = this.props;
         const {
             phase, players, playerWin, timed, time, userId,
-            master, readyPlayers, playerNames, wordGuessed, wordAccepted, playerAcceptVotes, noHints
+            master, readyPlayers, playerNames, wordGuessed, wordAccepted, playerAcceptVotes, noHints, guesPlayer, scoreChanges
         } = data;
         const playerAccepted = playerAcceptVotes.includes(userId);
         const isMaster = userId === master;
@@ -346,6 +364,42 @@ class StatusBar extends React.Component {
             <div className="status-bar-wrap">
                 <div className="status-bar">
                     <div className="aligner">
+                        <div className="active players">
+                            {master ? <div className="master">
+                                <div className="role">
+                                    <Avatar data={data} player={master} />
+                                    <div className="roleTitle">загадывает⠀
+                                    </div>
+                                </div>
+                                <div className="nickNameLock">
+                                    <PlayerName data={data} id={master} />
+                                    {scoreChanges[master] && (<div className="nickCorner">
+                                        <div className="score-change">
+                                            {'+' + scoreChanges[master]}
+                                        </div>
+                                    </div>)}
+                                </div>
+                            </div> : ""}
+                            <div className="Realtimer">
+                                <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} />
+                            </div>
+                            {guesPlayer ? <div className="guessPlayer">
+                                <div className="role">
+                                    <div className="roleTitle">⠀
+                                        отгадывает</div>
+                                    <Avatar data={data} player={guesPlayer} />
+                                </div>
+                                <div className="nickNameLock">
+                                    {scoreChanges[master] && (<div className="nickCorner">
+                                        <div className="score-change">
+                                            {'+' + scoreChanges[master]}
+                                        </div>
+                                    </div>)}
+                                    <PlayerName data={data} id={guesPlayer} />
+
+                                </div>
+                            </div> : ""}
+                        </div>
                         {content}
                     </div>
                     {data.userId == data.master && data.phase == 2 && <div class="masterButtons">
@@ -354,9 +408,6 @@ class StatusBar extends React.Component {
                     </div>}
                     {subtitle && <div className="subtitle">{subtitle}</div>}
                     {hasReady && <ReadyBtn isReady={isReady} socket={socket} />}
-                    {timed && time !== null && (
-                        <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} />
-                    )}
                 </div>
             </div>
         )

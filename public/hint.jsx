@@ -1,6 +1,6 @@
 class ScoreChange extends React.Component {
     render() {
-        const {change} = this.props;
+        const { change } = this.props;
         if (change === undefined) {
             return null;
         } else {
@@ -24,8 +24,8 @@ class Hint extends React.Component {
     }
 
     render() {
-        const {data, player, index} = this.props;
-        const {bannedHints, unbannedHints, hints, closedHints, playerLiked, userId, master, phase, wordGuessed, scoreChanges, rounds, players} = data;
+        const { data, player, index } = this.props;
+        const { bannedHints, unbannedHints, hints, closedHints, playerLiked, userId, master, phase, wordGuessed, scoreChanges, rounds, players } = data;
         const banned = bannedHints?.[player];
         const unbanned = unbannedHints?.[player];
         const isMaster = userId === master;
@@ -34,10 +34,13 @@ class Hint extends React.Component {
         const text = origText ? window.hyphenate(origText) : null;
 
         const corners = [];
-        if (!isGuesser ||playerLiked || (phase === 4 && !wordGuessed)) {
+        if (!isGuesser || playerLiked || (phase === 4 && !wordGuessed)) {
             corners.push(
                 <div className="bl-corner">
-                    <Avatar data={data} player={player}/>
+                    <Avatar data={data} player={player} />
+                    <div className="NickNameHerlock">
+                        <PlayerName data={data} id={player} />
+                    </div>
                 </div>
             )
         }
@@ -49,10 +52,10 @@ class Hint extends React.Component {
                         className="ban-hint-button" onClick={() => this.toggleHintBan(player)}
                     >
                         {(showWarnAvatars && banned)
-                            ? <Avatar data={data} player={banned}/>
+                            ? <Avatar data={data} player={banned} />
                             : ""}
                         {(showWarnAvatars && unbanned)
-                            ? <Avatar data={data} player={unbanned}/>
+                            ? <Avatar data={data} player={unbanned} />
                             : ""}
                         <i className="material-icons">warning</i>
                     </div>
@@ -90,14 +93,15 @@ class Hint extends React.Component {
 
         return (
             <div
-                className={cs("card hint", {banned: !!banned})}
+                className={cs("card hint", { banned: !!banned })}
                 style={Messy.getStyle(rounds + '_' + index)}
             >
-                {text != null
-                    ? <div className={cs("hint-text", {banned: !banned})}>{text}</div>
-                    : <div className="card-logo"
-                           style={Messy.getLogoStyle(rounds + '_' + index)}/>}
                 {corners}
+                {text != null
+                    ? <div className={cs("hint-text", { banned: !banned })}>{text.split(" ").map(word => <div>{word}</div>)}</div>
+                    : <div className="card-logo"
+                        style={Messy.getLogoStyle(rounds + '_' + index)} />}
+
             </div>
         )
     }
@@ -105,11 +109,11 @@ class Hint extends React.Component {
 
 class Hints extends React.Component {
     render() {
-        const {data, socket} = this.props;
+        const { data, socket } = this.props;
         return (
             <div className="words">
                 {data.playerHints.map((player, i) => (
-                    <Hint player={player} data={data} socket={socket} key={i} index={i}/>
+                    <Hint player={player} data={data} socket={socket} key={i} index={i} />
                 ))}
             </div>
         );
@@ -119,17 +123,17 @@ class Hints extends React.Component {
 class Messy {
     static genZigzag() {
         let x = 0;
-        const points = [{x, y: Math.random()}];
+        const points = [{ x, y: Math.random() }];
         const avgSpikes = 20;
         while (x < 1) {
             x += Math.random() / avgSpikes;
             x = Math.min(x, 1);
-            points.push({x, y: Math.random()});
+            points.push({ x, y: Math.random() });
         }
         return points;
     }
 
-    static frac2perc({x, y}, top) {
+    static frac2perc({ x, y }, top) {
         const maxDent = 0.03;
         const xDent = (top) ? x : 1 - x;
         const yDent = (top) ? maxDent * y : 1 - maxDent * y;
@@ -162,14 +166,7 @@ class Messy {
     static cacheLogo = {}
 
     static getStyle(key) {
-        if (!this.cache.hasOwnProperty(key)) {
-            this.cache[key] = {
-                clipPath: this.genPath(),
-                transform: this.genTransform(),
-                backgroundPosition: this.getBackgroundPosition()
-            }
-        }
-        return this.cache[key];
+        return {};
     }
 
     static getLogoStyle(key) {
