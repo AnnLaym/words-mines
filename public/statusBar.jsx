@@ -380,7 +380,7 @@ class StatusBar extends React.Component {
                                 </div>
                             </div> : ""}
                             <div className="Realtimer">
-                                {data.phase !== 0 && !timed ? <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} /> :
+                                {data.phase !== 0 && timed ? <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} /> :
                                     <img src="/words-mines/mina.png"></img>}
                             </div>
                             {guesPlayer ? <div className="guessPlayer">
