@@ -158,7 +158,7 @@ class ClosedWord extends React.Component {
             <div className={cs("closed-word", { mistake, back: !mistake && text == null })}>
                 {(text != null || mistake)
                     ? <div>{window.hyphenate(text ? text : `(${t("empty")})`)}</div>
-                    : <div className="card-logo" />}
+                    : <div className="card-logo"> X X X </div>}
                 {this.props.children}
             </div>
         )
@@ -368,11 +368,10 @@ class StatusBar extends React.Component {
                             {master ? <div className="master">
                                 <div className="role">
                                     <Avatar data={data} player={master} />
-                                    <div className="roleTitle">загадывает⠀
-                                    </div>
+                                    <div className="roleTitle"><PlayerName data={data} id={master} /></div>
                                 </div>
                                 <div className="nickNameLock">
-                                    <PlayerName data={data} id={master} />
+                                    загадывает
                                     {scoreChanges[master] && (<div className="nickCorner">
                                         <div className="score-change">
                                             {'+' + scoreChanges[master]}
@@ -381,12 +380,12 @@ class StatusBar extends React.Component {
                                 </div>
                             </div> : ""}
                             <div className="Realtimer">
-                                <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} />
+                                {data.phase !== 0 && !timed ? <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} /> :
+                                    <img src="/words-mines/mina.png"></img>}
                             </div>
                             {guesPlayer ? <div className="guessPlayer">
                                 <div className="role">
-                                    <div className="roleTitle">⠀
-                                        отгадывает</div>
+                                    <div className="roleTitle"><PlayerName data={data} id={guesPlayer} /></div>
                                     <Avatar data={data} player={guesPlayer} />
                                 </div>
                                 <div className="nickNameLock">
@@ -395,7 +394,7 @@ class StatusBar extends React.Component {
                                             {'+' + scoreChanges[master]}
                                         </div>
                                     </div>)}
-                                    <PlayerName data={data} id={guesPlayer} />
+                                    oтгадывает
 
                                 </div>
                             </div> : ""}

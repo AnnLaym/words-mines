@@ -57,7 +57,7 @@ class Hint extends React.Component {
                         {(showWarnAvatars && unbanned)
                             ? <Avatar data={data} player={unbanned} />
                             : ""}
-                        <i className="material-icons">warning</i>
+                        <img className="mina" src="/words-mines/mina.png"></img>
                     </div>
                 </div>
             )

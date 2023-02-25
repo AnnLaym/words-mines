@@ -12,12 +12,27 @@ body.dark-theme {
     flex-grow: 1;
 }
 
+.bl-corner .avatar {
+    max-width: 32px;
+}
+
 .aligner {
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-flow: column;
+}
+
+img.mina {
+    width: 44px;
+    filter: invert(1) brightness(0.6)  saturate(1.5);
+}
+
+.banned img.mina {
+    filter: sepia(1);
+    filter: invert(1) brightness(0.4) sepia(1) saturate(5.5) hue-rotate(285deg);
+    width: 125px;
 }
 
 .guessPlayer .score-change {
@@ -47,6 +62,11 @@ body.dark-theme {
     gap: 13px;
     color: white;
     margin-left: 10px;
+    align-items: center;
+    max-width: 73px;
+    overflow: hidden;
+    font-weight: bold;
+    text-overflow: ellipsis;
 }
 
 .master .nickNameLock {
@@ -74,10 +94,12 @@ body.dark-theme {
 .role {
     display: flex;
     align-items: center;
-    gap: 10px;
+    /* gap: 10px; */
     background: #444;
     border-radius: 40px;
     font-family: arial;
+    justify-content: space-between;
+    width: 216px;
 }
 
 .nickNameLock {
@@ -90,13 +112,18 @@ body.dark-theme {
 }
 
 .roleTitle {
-    font-size: 33px;
-    text-align: left;
+    font-size: 23px;
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+    margin-top: -2px;
+    padding: 10px;
 }
 
 .active.players .avatar {
     width: 50px;
     height: 50px;
+    max-width: 50px;
 }
 
 .guessPlayer .nickNameLock {
@@ -121,6 +148,7 @@ body.dark-theme {
     background: #444;
     border-radius: 50%;
     padding: 4px;
+    margin-top: -6px;
 }
 .active.players {
     display: flex;
@@ -228,7 +256,7 @@ body.dark-theme {
     padding: 0px 8.5px;
     line-height: 16px;
     align-items: center;
-    border-radius: 50%;
+    border-radius: 50px;
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 23px;
 }
@@ -436,6 +464,8 @@ body {
     padding-bottom: 10px;
     position: relative;
     text-align: center;
+    padding-top: 10px;
+    font-family: arial;
 }
 
 .hint-form {
@@ -644,6 +674,9 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    flex: 1;
+    min-width: 32px;
+    /* max-width: 32px; */
 }
 
 .avatar-stub {
@@ -893,7 +926,7 @@ input#command-input {
 
 .ban-hint-button, .set-like-button {
     cursor: pointer;
-    /* padding: 5px; */
+    padding: 3px;
     /* position: absolute; */
 }
 
@@ -907,6 +940,7 @@ input#command-input {
 
 .ban-hint-button .material-icons {
     font-size: 32px;
+    color: white;
 }
 
 .player.offline {
@@ -926,7 +960,7 @@ input#command-input {
     position: relative;
     box-sizing: border-box;
     text-align: center;
-    flex: 1;
+    /* flex: 1; */
     color: #444;
 }
 
@@ -952,6 +986,7 @@ input#command-input {
     border-radius: 20px;
     font-size: 20px;
     align-content: baseline;
+    font-family: arial;
 }
 
 .card {
@@ -1014,15 +1049,11 @@ input#command-input {
     color: white;
     text-align: start;
     margin-left: -47px;
-}
-
-.card.banned .hint-text:after {
-    border-top: 2px solid #000;
-    position: absolute;
-    content: "";
-    right: 0;
-    top: 54%;
-    left: 0;
+    min-width: 100px;
+    max-width: 120px;
+    line-height: 23px;
+    font-weight: normal;
+    padding-bottom: 8px;
 }
 
 .card .bl-corner {
@@ -1032,6 +1063,7 @@ input#command-input {
     padding: 0px;
     display: flex;
     margin-left: -54px;
+    align-items: center;
 }
 
 .card.closed-word .bl-corner, .card.closed-word .br-corner {
@@ -1106,16 +1138,19 @@ input#command-input {
 }
 
 .ban-hint-button .avatar {
-    clip-path: polygon(0% 9%, 100% 9%, 58% 100%, 0 100%);
-    margin-right: -13px;
+    /* clip-path: polygon(0% 9%, 100% 9%, 58% 100%, 0 100%); */
+    margin-right: -24px;
     opacity: 0.5;
-    width: 34px;
+    width: 4px;
     pointer-events: fill;
-    height: 28px;
+    height: 31px;
+    margin-top: 7px;
 }
 
 .banned .ban-hint-button .avatar {
     opacity: 0.7;
+    left: 86px;
+    position: absolute;
 }
 
 .ban-hint-button {
@@ -1177,6 +1212,10 @@ input#command-input {
 
 .rtb-clip2 {
     clip: rect(0, 35px, 70px, 0);
+}
+
+.Realtimer img {
+    filter: invert(1) brightness(0.8);
 }
 
 .rtb-slice1 {
