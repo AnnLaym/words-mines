@@ -4,7 +4,7 @@ function init(wsServer, path) {
         randomColor = require('randomcolor'),
         app = wsServer.app,
         registry = wsServer.users,
-        channel = "just-one",
+        channel = "words-mines",
         testMode = process.argv[2] === "debug",
         PLAYERS_MIN = testMode ? 1 : 4;
 
@@ -183,9 +183,9 @@ function init(wsServer, path) {
                     if (room.players.size >= PLAYERS_MIN) {
                         room.masterKicked = false;
                         room.readyToGuess = null,
-                        room.guesPlayer = null;
+                            room.guesPlayer = null;
                         room.wasGuesser = [],
-                        room.playerWin = null;
+                            room.playerWin = null;
                         room.playerScores = {};
                         room.scoreChanges = {};
                         room.paused = false;
@@ -200,9 +200,8 @@ function init(wsServer, path) {
                 },
                 endGame = () => {
                     room.paused = true;
-                    room.guesPlayer = null;
-                    room.wasGuesser = [],
-                        room.teamsLocked = false;
+                    room.wasGuesser = [];
+                    room.teamsLocked = false;
                     room.time = null;
                     room.phase = 0;
                     room.playerAcceptVotes.clear();

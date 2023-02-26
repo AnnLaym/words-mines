@@ -383,7 +383,7 @@ class StatusBar extends React.Component {
                                 {data.phase !== 0 && timed ? <ProgressBar data={data} setPhase2={setPhase2} setTime={setTime} /> :
                                     <img src="/words-mines/mina.png"></img>}
                             </div>
-                            {guesPlayer ? <div className="guessPlayer">
+                            {guesPlayer || data.phase == 0 || data.phase == 4 ? <div className="guessPlayer">
                                 <div className="role">
                                     <div className="roleTitle"><PlayerName data={data} id={guesPlayer} /></div>
                                     <Avatar data={data} player={guesPlayer} />

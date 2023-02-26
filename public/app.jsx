@@ -55,7 +55,7 @@ class Game extends React.Component {
         this.socket.on("state", state => {
             CommonRoom.processCommonRoom(state, this.state, {
                 maxPlayers: "∞",
-                largeImageKey: "just-one",
+                largeImageKey: "words-mines",
                 details: "Намёк понял!"
             }, this);
             if (this.state.phase && state.phase !== 0 && !parseInt(localStorage.muteSounds)) {
