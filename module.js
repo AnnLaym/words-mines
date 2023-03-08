@@ -58,11 +58,14 @@ function init(wsServer, path) {
                     playerAvatars: {},
                     playerLiked: null,
                     playerWin: null,
+                    wasMaster: null,
                     wordGuessed: null,
                     wordAccepted: null,
                     managedVoice: true,
                     masterKicked: false,
                     noHints: false,
+                    filtered: [],
+
                 },
                 state = {
                     roomWordsList: shuffleArray(defaultWords[room.wordsLevel]),
@@ -182,10 +185,11 @@ function init(wsServer, path) {
                 startGame = () => {
                     if (room.players.size >= PLAYERS_MIN) {
                         room.masterKicked = false;
-                        room.readyToGuess = null,
-                            room.guesPlayer = null;
-                        room.wasGuesser = [],
-                            room.playerWin = null;
+                        room.readyToGuess = null;
+                        room.guesPlayer = null;
+                        room.wasGuesser = [];
+                        room.wasMaster = [];
+                        room.playerWin = null;
                         room.playerScores = {};
                         room.scoreChanges = {};
                         room.paused = false;
@@ -201,6 +205,7 @@ function init(wsServer, path) {
                 endGame = () => {
                     room.paused = true;
                     room.wasGuesser = [];
+                    room.wasMaster = [];
                     room.teamsLocked = false;
                     room.time = null;
                     room.phase = 0;
@@ -215,7 +220,6 @@ function init(wsServer, path) {
                     room.scoreChanges[player] = room.scoreChanges[player] || 0;
                     room.scoreChanges[player] += change;
                 },
-
                 endRound = () => {
                     room.phase = 4;
                     Object.keys(state.closedHints).forEach((player) => {
@@ -230,6 +234,7 @@ function init(wsServer, path) {
                     };
                     room.word = state.closedWord;
                     room.hints = state.closedHints;
+                    room.wasMaster.push(room.master);
                     room.readyPlayers.clear();
                     room.playerAcceptVotes.clear();
                     startTimer();
@@ -246,11 +251,23 @@ function init(wsServer, path) {
                     updatePlayerState();
                 },
                 nextGuessPlayer = () => {
-                    const filtered = [...room.players].filter(it => {
+                    room.filtered = [...room.players].filter(it => {
                         return !room.wasGuesser.includes(it) && it !== room.master;
                     });
-                    room.guesPlayer = shuffleArray(filtered)[0];
+                    if (room.filtered.length == 0) {
+                        room.wasGuesser = [];
+                        room.filtered = [...room.players].filter(it => {
+                            return !room.wasGuesser.includes(it) && it !== room.master;
+                        });
+                    };
+                    room.guesPlayer = shuffleArray(room.filtered)[0];
                     room.wasGuesser.push(room.guesPlayer);
+                },
+                testNapidOra = (player) => {
+                    if (!room.wasMaster.includes(player)) {
+                        room.wasMaster.push(player);
+                        return getNextPlayer();
+                    }
                 },
                 startRound = (initial) => {
                     room.readyPlayers.clear();
@@ -479,6 +496,20 @@ function init(wsServer, path) {
                         checkScores();
                         update();
                     };
+                },
+                "set-player-score": (user, data) => {
+                    if (room.hostId === user && room.players.has(user) && !isNaN(parseInt(data.score))) {
+                        room.playerScores[data.playerId] = parseInt(data.score);
+                        update();
+                        updatePlayerState();
+                    }
+                },
+                "edit-code-word": (user, word) => {
+                    if (room.phase === 1 && word && room.readyPlayers.has(user)) {
+                        state.closedHints[user] = word;
+                        update();
+                        updatePlayerState();
+                    }
                 },
                 "toggle-ready": (user) => {
                     if (room.players.has(user) && (room.phase === 4)) {

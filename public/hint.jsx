@@ -15,6 +15,15 @@ class ScoreChange extends React.Component {
 }
 
 class Hint extends React.Component {
+    handleEditCodeWord() {
+        const { data, player } = this.props;
+        const word = data.closedHints[player];
+        popup.prompt({ content: "Edit command", value: word }, (evt) => {
+            if (evt.proceed && evt.input_value.trim())
+                this.props.socket.emit("edit-code-word", evt.input_value);
+        });
+    }
+
     toggleHintBan(user) {
         this.props.socket.emit("toggle-hint-ban", user);
     }
@@ -25,7 +34,8 @@ class Hint extends React.Component {
 
     render() {
         const { data, player, index } = this.props;
-        const { bannedHints, unbannedHints, hints, closedHints, playerLiked, userId, master, phase, wordGuessed, scoreChanges, rounds, players } = data;
+        const { bannedHints, unbannedHints, hints, closedHints, playerLiked, userId, master, phase,
+            wordGuessed, scoreChanges, rounds, players } = data;
         const banned = bannedHints?.[player];
         const unbanned = unbannedHints?.[player];
         const isMaster = userId === master;
@@ -44,6 +54,21 @@ class Hint extends React.Component {
                 </div>
             )
         }
+
+        if (phase == 1 && userId == player) {
+            corners.push(
+                <div className="tr-corner">
+                    {(phase === 1)
+                        ? <i className="material-icons host-button edit-word-button"
+                            title="Edit"
+                            onClick={() => this.handleEditCodeWord()}>
+                            &nbsp;edit
+                        </i>
+                        : ""}
+                </div>
+            )
+        }
+
         if (phase === 2 || (phase === 4 && banned)) {
             const showWarnAvatars = (!isMaster && !isGuesser && players.includes(userId)) || phase === 4;
             corners.push(
