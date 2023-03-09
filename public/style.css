@@ -33,13 +33,15 @@ i.material-icons.host-button.edit-word-button {
 }
 
 img.mina {
-    width: 44px;
+    width: 35px;
     filter: invert(1) brightness(0.6)  saturate(1.5);
+    margin-top: 5px;
+    margin-right: 5px;
 }
 
 .banned img.mina {
     filter: sepia(1);
-    filter: invert(1) brightness(0.4) sepia(1) saturate(5.5) hue-rotate(285deg);
+    filter: invert(1) brightness(0.4) sepia(1) saturate(100) hue-rotate(352deg);
     width: 125px;
 }
 
@@ -181,11 +183,11 @@ img.mina {
     filter: drop-shadow(0px 0px 3px #7ace5a);
 }
 .player.master {
-    filter: drop-shadow(0px 0px 3px cyan);
-    color: #00bdbd;
+    /* filter: drop-shadow(0px 0px 3px cyan); */
+    /* color: #00bdbd; */
 }
 .player.guesser {
-    filter: drop-shadow(0px 0px 3px #ffffff);
+    /* filter: drop-shadow(0px 0px 3px #ffffff); */
 }
 
 
@@ -253,7 +255,7 @@ img.mina {
 }
 
 .wordGuessedButton, .wordNotGuessedButton {
-    color: #f5ec3d;
+    color: #ffaa00;
     cursor: pointer;
     border-radius: 40px;
     padding: 5px 16px;
@@ -533,8 +535,8 @@ body {
     font-size: 32px;
     border-radius: 40px;
     padding: 5px 16px;
-    border: 2px solid #dfdc22;
-    filter: drop-shadow(0px 0px 6px yellow);
+    border: 2px solid #ff5500;
+    filter: drop-shadow(0px 0px 6px #ffaa00);
     min-width: 100;
     min-height: 30;
     text-align: center;
@@ -951,6 +953,9 @@ input#command-input {
 
 .ban-hint-button i, .set-like-button i {
     font-size: 31px;
+    margin-right: 5px;
+    margin-top: 5px;
+    color: #ff5500;
 }
 
 .ban-hint-button .material-icons {
@@ -1038,11 +1043,13 @@ input#command-input {
 }
 
 .score-change {
-    color: green;
+    color: #28ac34;
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     letter-spacing: 0.5px;
     font-size: 28px;
+    /* position: fixed; */
+    /* left: 158px; */
     /* top: -2px; */
 }
 
@@ -1233,6 +1240,8 @@ input#command-input {
 
 .Realtimer img {
     filter: invert(1) brightness(0.8);
+    size: 30px;
+    margin: 6px;
 }
 
 .rtb-slice1 {

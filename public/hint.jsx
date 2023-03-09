@@ -103,18 +103,19 @@ class Hint extends React.Component {
                     </div>
                 </div>
             )
-        }
-        const delta = scoreChanges[player];
-        if (delta) {
-            const changeText = ((delta > 0) ? '+' : '') + delta;
-            corners.push(
-                <div className="tl-corner">
-                    <div className="score-change">
-                        {changeText}
+            const delta = scoreChanges[player];
+            if (delta) {
+                const changeText = ((delta > 0) ? '+' : '') + delta;
+                corners.push(
+                    <div className="tl-corner">
+                        <div className="score-change">
+                            {changeText}
+                        </div>
                     </div>
-                </div>
-            )
+                )
+            }
         }
+
 
         return (
             <div
