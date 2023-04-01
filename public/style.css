@@ -20,6 +20,11 @@ i.material-icons.host-button.edit-word-button {
     cursor: pointer;
 }
 
+.master .role {
+    display: flex;
+    justify-content: flex-start;
+}
+
 .bl-corner .avatar {
     max-width: 32px;
 }
@@ -147,6 +152,7 @@ img.mina {
 
 .guessPlayer {
     display: flex;
+    justify-content: flex-end;
 }
 
 .master, .guessPlayer {
@@ -158,8 +164,8 @@ img.mina {
 
 .Realtimer {
     display: flex;
-    width: 55px;
-    height: 55px;
+    width: 54px;
+    height: 54px;
     background: #444;
     border-radius: 50%;
     padding: 4px;
@@ -180,7 +186,7 @@ img.mina {
 }
 
 .player.ready {
-    filter: drop-shadow(0px 0px 3px #7ace5a);
+    /* filter: drop-shadow(0px 0px 3px #7ace5a); */
 }
 .player.master {
     /* filter: drop-shadow(0px 0px 3px cyan); */
@@ -1048,9 +1054,6 @@ input#command-input {
     font-family: 'Roboto Condensed', sans-serif;
     letter-spacing: 0.5px;
     font-size: 28px;
-    /* position: fixed; */
-    /* left: 158px; */
-    /* top: -2px; */
 }
 
 .card.closed-word .score-change {
@@ -1300,4 +1303,6 @@ input#hint-input {
 
 .GuessPlayer .role {
     text-align: right;
+    display: flex;
+    justify-content: flex-end;
 }
